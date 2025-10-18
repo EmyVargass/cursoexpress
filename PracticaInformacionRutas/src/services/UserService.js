@@ -1,5 +1,6 @@
 // services/UserService.js
 
+const bcrypt = require('bcrypt');
 const sequelize = require('../db/sequelize');
 const { User } = sequelize.models; // Accede al modelo inicializado
 
@@ -14,8 +15,17 @@ class UserService {
         return User.findByPk(id); 
     }
 
+    async findByEmail(email) {
+        return User.findOne({ where: { email } });
+    }
+
     async create(data) {
-        return User.create(data);
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+        const newData = {
+            ...data,
+            password: hashedPassword
+        };
+        return User.create(newData);
     }
 
     async update(id, changes) {

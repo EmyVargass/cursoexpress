@@ -29,8 +29,9 @@ sequelize.sync()
     .then(() => console.log('Tablas sincronizadas con la base de datos.'));
 // ----------------------------------------------------------------------
 
-// Importar el router de usuarios
+// Importar routers
 const userRoutes = require('./routes/UserRoutes'); 
+const authRoutes = require('./routes/auth.routes');
 
 
 // =========================================================
@@ -41,11 +42,16 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json()); // Para leer req.body
 
+const passport = require('passport');
+require('./utils/auth'); // Set up authentication strategies
+app.use(passport.initialize());
+
 
 // =========================================================
 // 🛣️ MONTAJE DE RUTAS Y SWAGGER
 // =========================================================
 
+app.use('/api/auth', authRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/usuarios', userRoutes); 
 

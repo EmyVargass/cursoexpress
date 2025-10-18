@@ -4,11 +4,12 @@ const express = require('express');
 const router = express.Router(); 
 const UserService = require('../services/UserService'); 
 const validatorHandler = require('../middlewares/validator.handler');
+const { jwtAuth, checkRoles } = require('../middlewares/auth.handler');
 const { createUserSchema, updateUserSchema, getUserSchema } = require('../validators/user.validator');
 
 const service = new UserService();
 
-// C: CREATE (POST /usuarios)
+// C: CREATE (POST /usuarios) - Public
 router.post('/', 
     validatorHandler(createUserSchema, 'body'),
     async (req, res, next) => {
@@ -20,8 +21,11 @@ router.post('/',
     }
 });
 
-// R: READ ALL (GET /usuarios)
-router.get('/', async (req, res, next) => {
+// R: READ ALL (GET /usuarios) - Admin only
+router.get('/', 
+    jwtAuth,
+    checkRoles('admin'),
+    async (req, res, next) => {
     try {
         const users = await service.findAll();
         res.json({ total: users.length, data: users });
@@ -30,7 +34,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-// R: READ ONE (GET /usuarios/:id)
+// R: READ ONE (GET /usuarios/:id) - Public
 router.get('/:id', 
     validatorHandler(getUserSchema, 'params'),
     async (req, res, next) => {
@@ -47,8 +51,9 @@ router.get('/:id',
     }
 });
 
-// U: UPDATE (PUT /usuarios/:id)
+// U: UPDATE (PUT /usuarios/:id) - Authenticated users
 router.put('/:id', 
+    jwtAuth, // Require authentication
     validatorHandler(getUserSchema, 'params'),
     validatorHandler(updateUserSchema, 'body'),
     async (req, res, next) => {
@@ -65,8 +70,10 @@ router.put('/:id',
     }
 });
 
-// D: DELETE (DELETE /usuarios/:id)
+// D: DELETE (DELETE /usuarios/:id) - Admin only
 router.delete('/:id', 
+    jwtAuth,
+    checkRoles('admin'),
     validatorHandler(getUserSchema, 'params'),
     async (req, res, next) => {
     try {
