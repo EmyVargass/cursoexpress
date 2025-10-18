@@ -4,7 +4,8 @@
   "description": "Práctica de rutas con Express.js.",
   "main": "src/app.js",
   "scripts": {
-    "start": "pm2 start src/app.js"
+    "start": "pm2 start src/app.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -24,5 +25,10 @@
     "sqlite3": "^5.1.7",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4"
   }
 }
