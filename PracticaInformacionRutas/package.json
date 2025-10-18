@@ -1,0 +1,23 @@
+{
+  "name": "practicainformacionrutas",
+  "version": "1.0.0",
+  "description": "Práctica de rutas con Express.js.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "pm2 start src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "mysql2": "^3.15.2",
+    "pm2": "^6.0.13",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  }
+}

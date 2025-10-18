@@ -1,0 +1,142 @@
+# swagger.yaml
+
+openapi: 3.0.0
+info:
+  title: API de Usuarios (CRUD)
+  version: 1.0.0
+  description: API de ejemplo para operaciones CRUD sobre un recurso de usuarios, implementando la capa de servicios.
+
+servers:
+  - url: http://localhost:3000/api/usuarios
+    description: Servidor de Desarrollo
+
+paths:
+  /:
+    get:
+      summary: Obtener todos los usuarios
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Lista de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/User'
+    post:
+      summary: Crear un nuevo usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID del usuario
+    get:
+      summary: Obtener un usuario por ID
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+    put: # ✅ CORREGIDO: Misma indentación que 'get'
+      summary: Actualizar un usuario por ID
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    delete: # ✅ CORREGIDO: Misma indentación que 'get'
+      summary: Eliminar un usuario por ID
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Usuario eliminado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        nombre:
+          type: string
+          example: Alice Smith
+        email:
+          type: string
+          example: alice@example.com
+    UserCreate:
+      type: object
+      required:
+        - nombre
+      properties:
+        nombre:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john@example.com
+    UserUpdate:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Johnathan Doe
+        email:
+          type: string
+          example: johnathan@example.com
+    UserResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Usuario creado
+        data:
+          $ref: '#/components/schemas/User'
