@@ -1,20 +1,12 @@
 const express = require('express');
+const AuthController = require('../controllers/auth.controller');
 
 function createAuthRouter(authService) {
     const router = express.Router();
+    const authController = new AuthController(authService);
 
     router.post('/login',
-      async (req, res, next) => {
-        try {
-          const { email, password } = req.body;
-          const user = await authService.getUser(email, password);
-          const tokenData = authService.signToken(user);
-          res.json(tokenData);
-        } catch (error) {
-          // For authentication errors, it's better to send a 401 Unauthorized status
-          res.status(401).json({ error: error.message });
-        }
-      }
+      authController.login.bind(authController)
     );
 
     return router;
